@@ -375,7 +375,7 @@ def chembl(out_fn, dataset_name, dimension, radius, distance, type, test_size=10
     
     from google_drive_downloader import GoogleDriveDownloader as gdd
     
-    local_fn = dataset_name+'-'+dimension+'-' +distance+'.hdf5' 
+    local_fn = dataset_name+'-'+str(dimension+)'-' +str(distance)+'.hdf5' 
     
 
     gdd.download_file_from_google_drive(file_id='1n72vyrCJ_VB3WLvSW52btEie6AobOHs7',
@@ -387,8 +387,8 @@ def chembl(out_fn, dataset_name, dimension, radius, distance, type, test_size=10
     os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.distance', distance)
     os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.dimension', dimension)
     os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.type', 'sparse')
-    import gzip
-    local_fn = 'chembl-1024-jaccard.hdf5'
+    #import gzip
+    #local_fn = 'chembl-1024-jaccard.hdf5'
     # only consider sets with at least min_elements many elements
     #min_elements = 20
     #url = 'https://drive.google.com/file/d/1n72vyrCJ_VB3WLvSW52btEie6AobOHs7/view?usp=sharing'
