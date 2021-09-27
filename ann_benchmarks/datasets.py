@@ -377,7 +377,7 @@ def chembl(out_fn):
 
     gdd.download_file_from_google_drive(file_id='1n72vyrCJ_VB3WLvSW52btEie6AobOHs7',
                                     dest_path='./data/chembl-1024-jaccard.hdf5',
-                                    unzip=false)
+                                    unzip=False)
     import gzip
     local_fn = 'chembl-1024-jaccard.hdf5'
     # only consider sets with at least min_elements many elements
