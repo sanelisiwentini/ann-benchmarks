@@ -371,12 +371,19 @@ def kosarak(out_fn):
     write_sparse_output(X_train, X_test, out_fn, 'jaccard', dimension)
     
 def chembl(out_fn):
+    
+    
+    from google_drive_downloader import GoogleDriveDownloader as gdd
+
+    gdd.download_file_from_google_drive(file_id='1n72vyrCJ_VB3WLvSW52btEie6AobOHs7',
+                                    dest_path='./data/chembl-1024-jaccard.hdf5',
+                                    unzip=false)
     import gzip
     local_fn = 'chembl-1024-jaccard.hdf5'
     # only consider sets with at least min_elements many elements
     #min_elements = 20
-    url = 'https://drive.google.com/file/d/1n72vyrCJ_VB3WLvSW52btEie6AobOHs7/view?usp=sharing'
-    download(url, local_fn)
+    #url = 'https://drive.google.com/file/d/1n72vyrCJ_VB3WLvSW52btEie6AobOHs7/view?usp=sharing'
+    #download(url, local_fn)
 
     #X = []
     #dimension = 0
