@@ -370,14 +370,23 @@ def kosarak(out_fn):
     X_train, X_test = train_test_split(numpy.array(X), test_size=500, dimension=dimension)
     write_sparse_output(X_train, X_test, out_fn, 'jaccard', dimension)
     
-def chembl(out_fn):
+def chembl(out_fn, dataset_name, dimension, radius, distance, type, test_size=1000):
     
     
     from google_drive_downloader import GoogleDriveDownloader as gdd
+    
+    local_fn = dataset_name+'-'+dimension+'-' +distance+'.hdf5' 
+    
 
     gdd.download_file_from_google_drive(file_id='1n72vyrCJ_VB3WLvSW52btEie6AobOHs7',
-                                    dest_path='./data/chembl-1024-jaccard.hdf5',
+                                    dest_path='./data/'+local_fn,
                                     unzip=False)
+    import os
+
+    os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.point_type', type)
+    os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.distance', distance)
+    os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.dimension', dimension)
+    os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.type', 'sparse')
     import gzip
     local_fn = 'chembl-1024-jaccard.hdf5'
     # only consider sets with at least min_elements many elements
@@ -491,6 +500,6 @@ DATASETS = {
     'lastfm-64-dot': lambda out_fn: lastfm(out_fn, 64),
     'sift-256-hamming': lambda out_fn: sift_hamming(
         out_fn, 'sift.hamming.256'),
-    'chembl-1024-jaccard': lambda out_fn: chembl(out_fn),    
+    'chembl-1024-jaccard': lambda out_fn: chembl(out_fn, 'chembl', 1024, 2, 'jaccard', 'bit'),  
     'kosarak-jaccard': lambda out_fn: kosarak(out_fn),
 }
