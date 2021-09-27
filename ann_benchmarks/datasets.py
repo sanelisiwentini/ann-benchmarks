@@ -369,6 +369,28 @@ def kosarak(out_fn):
 
     X_train, X_test = train_test_split(numpy.array(X), test_size=500, dimension=dimension)
     write_sparse_output(X_train, X_test, out_fn, 'jaccard', dimension)
+    
+def chembl(out_fn):
+    import gzip
+    local_fn = 'chembl-1024-jaccard.hdf5'
+    # only consider sets with at least min_elements many elements
+    #min_elements = 20
+    url = 'https://drive.google.com/file/d/1n72vyrCJ_VB3WLvSW52btEie6AobOHs7/view?usp=sharing'
+    download(url, local_fn)
+
+    #X = []
+    #dimension = 0
+    #with gzip.open('kosarak.dat.gz', 'r') as f:
+    #    content = f.readlines()
+        # preprocess data to find sets with more than 20 elements
+        # keep track of used ids for reenumeration
+    #    for line in content:
+    #        if len(line.split()) >= min_elements:
+    #            X.append(list(map(int, line.split())))
+    #            dimension = max(dimension, max(X[-1]) + 1)
+
+    #X_train, X_test = train_test_split(numpy.array(X), test_size=500, dimension=dimension)
+    #write_sparse_output(X_train, X_test, out_fn, 'jaccard', dimension)    
 
 def random_jaccard(out_fn, n=10000, size=50, universe=80):
     random.seed(1)
@@ -462,5 +484,6 @@ DATASETS = {
     'lastfm-64-dot': lambda out_fn: lastfm(out_fn, 64),
     'sift-256-hamming': lambda out_fn: sift_hamming(
         out_fn, 'sift.hamming.256'),
+    'chembl-1024-jaccard': lambda out_fn: chembl(out_fn, 'Chembl', 1024, 2, 'jaccard', 'bit'),    
     'kosarak-jaccard': lambda out_fn: kosarak(out_fn),
 }
