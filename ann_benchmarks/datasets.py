@@ -484,6 +484,6 @@ DATASETS = {
     'lastfm-64-dot': lambda out_fn: lastfm(out_fn, 64),
     'sift-256-hamming': lambda out_fn: sift_hamming(
         out_fn, 'sift.hamming.256'),
-    'chembl-1024-jaccard': lambda out_fn: chembl(out_fn, 'Chembl', 1024, 2, 'jaccard', 'bit'),    
+    'chembl-1024-jaccard': lambda out_fn: chembl(out_fn),    
     'kosarak-jaccard': lambda out_fn: kosarak(out_fn),
 }
