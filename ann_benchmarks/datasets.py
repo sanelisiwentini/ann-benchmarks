@@ -689,4 +689,5 @@ DATASETS = {
     'chembl-512-p7-jaccard-tp': lambda out_fn: topological_fp(out_fn, 'Chembl', 512, 7, 'jaccard', 'bit'),
     'chembl-2048-p7-jaccard-tp': lambda out_fn: topological_fp(out_fn, 'Chembl', 2048, 7, 'jaccard', 'bit'),
     'chembl-2048-p3-jaccard-tp': lambda out_fn: topological_fp(out_fn, 'Chembl', 2048, 3, 'jaccard', 'bit'),
-    'chembl-2048-p5-jaccard-t
+    'chembl-2048-p5-jaccard-tp': lambda out_fn: topological_fp(out_fn, 'Chembl', 2048, 5, 'jaccard', 'bit')
+}
