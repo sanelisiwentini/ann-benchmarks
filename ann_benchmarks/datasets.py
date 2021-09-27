@@ -407,7 +407,72 @@ def chembl(out_fn, dataset_name, dimension, radius, distance, type, test_size=10
 
     #X_train, X_test = train_test_split(numpy.array(X), test_size=500, dimension=dimension)
     #write_sparse_output(X_train, X_test, out_fn, 'jaccard', dimension)    
+def ecfp(out_fn, dataset_name, dimension, radius, distance, type, test_size=1000):
+    from sklearn.utils import shuffle
+    print('prepare dataset ' + dataset_name)
 
+    if type == 'bit':
+        dtype = numpy.bool
+    elif type == 'int':
+        dtype = numpy.int
+    else:
+        dtype = numpy.float
+
+    dir = './data'
+
+    X, SMILES, IDS = get_sparse_matrix_from_sdf(dir=dir, dimension=dimension, radius=radius, dtype=dtype)
+
+    # random shuffle fingerprints and smiles at the same time
+    seed = 1 # random.randint(0, 2 ** 32 - 1)
+    X, SMILES, IDS = shuffle(X, SMILES, IDS, random_state=seed)
+
+    # data split and make test data full matrix
+    train_size = X.shape[0] - test_size
+    X_train = X[:train_size]
+    X_test = X[train_size:]
+    X_test = X_test.toarray()
+    print('finish dataset preparation')
+
+    print('Train data dimension: %d*%d' %X_train.shape)
+    print('Test data dimension: %d*%d' %X_test.shape)
+    write_output(X_train, X_test, out_fn, distance, type, count=1000, SMILES=SMILES, IDS=IDS)
+
+def get_sparse_matrix_from_sdf(dir, dimension = 1024, radius=2, dtype=numpy.bool):
+    from rdkit import Chem
+    from rdkit.Chem import AllChem
+    import glob
+    import gzip
+    from scipy.sparse import csr_matrix
+
+    SMILES = []
+    IDS = []
+    indptr = [0]
+    indices = []
+    data = []
+    num_mols = 0
+    file_list = glob.glob(dir + '/*.sdf.gz')
+    print(file_list)
+    for file in file_list:
+        inf = gzip.open(file)
+        suppl = Chem.ForwardSDMolSupplier(inf)
+        for mol in suppl:
+            if mol is None: continue
+            smile = Chem.MolToSmiles(mol)
+            SMILES.append(smile)
+            IDS.append(mol.GetProp("_Name"))
+            fp = AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits=dimension)
+            for i in range(dimension):
+                if fp.GetBit(i) is True:
+                    indices.append(i)
+                    data.append(1)
+            indptr.append(len(indices))
+            num_mols += 1
+
+    fps = csr_matrix((data, indices, indptr), shape=(num_mols, dimension), dtype=dtype)
+    print('The dimension of the returned sparse matrix: %d*%d' % fps.shape)
+
+    return fps, SMILES, IDS
+    
 def random_jaccard(out_fn, n=10000, size=50, universe=80):
     random.seed(1)
     l = list(range(universe))
@@ -500,6 +565,6 @@ DATASETS = {
     'lastfm-64-dot': lambda out_fn: lastfm(out_fn, 64),
     'sift-256-hamming': lambda out_fn: sift_hamming(
         out_fn, 'sift.hamming.256'),
-    'chembl-1024-jaccard': lambda out_fn: chembl(out_fn, 'chembl', 1024, 2, 'jaccard', 'bit'),  
+    'chembl-1024-jaccard': lambda out_fn: ecfp(out_fn, 'chembl', 1024, 2, 'jaccard', 'bit'),  
     'kosarak-jaccard': lambda out_fn: kosarak(out_fn),
 }
