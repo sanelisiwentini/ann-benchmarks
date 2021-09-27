@@ -375,7 +375,7 @@ def chembl(out_fn, dataset_name, dimension, radius, distance, type, test_size=10
     
     from google_drive_downloader import GoogleDriveDownloader as gdd
     
-    local_fn = dataset_name+'-'+str(dimension+)'-' +str(distance)+'.hdf5' 
+    local_fn = dataset_name+'-'+str(dimension)+'-' +str(distance)+'.hdf5' 
     
 
     gdd.download_file_from_google_drive(file_id='1n72vyrCJ_VB3WLvSW52btEie6AobOHs7',
