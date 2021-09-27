@@ -381,12 +381,12 @@ def chembl(out_fn, dataset_name, dimension, radius, distance, type, test_size=10
     gdd.download_file_from_google_drive(file_id='1n72vyrCJ_VB3WLvSW52btEie6AobOHs7',
                                     dest_path='./data/'+local_fn,
                                     unzip=False)
-    import os
-
-    os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.point_type', type)
-    os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.distance', distance)
-    os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.dimension', dimension)
-    os.setxattr('./data/chembl-1024-jaccard.hdf5', 'user.type', 'sparse')
+    f = h5py.File(out_fn, 'w')
+    f.attrs['type'] = 'sparse'
+    f.attrs['distance'] = distance
+    f.attrs['dimension'] = dimension
+    f.attrs['point_type'] = type
+    f.close()
     #import gzip
     #local_fn = 'chembl-1024-jaccard.hdf5'
     # only consider sets with at least min_elements many elements
